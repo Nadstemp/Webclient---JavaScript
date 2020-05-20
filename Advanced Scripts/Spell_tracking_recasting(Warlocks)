@@ -1,0 +1,366 @@
+Spell tracking/recasting tool: Recasts a spell when it wears off and tracks active/inactive spells which can be casted
+
+
+Usage: 
+======
+
+
+Tips: 
+=====
++change alias names to names you are comfortabe with, just make sure their references are changed too
+
+Known issues: 
+=============
+Outputs that produce the same result as a misfiring spell result in a 0 spell being added to the table
+Need to add functionality for tracking how many times spell has been cast to create a new charm after the 10th occasion (when it wears off)
+
+Authors: 
+========
+Hannabeth (Nadine)
+
+Changelog:
+==========
+Version as of 20/05/2020
+
+Manifest:
+=========
+6 triggers, 12 aliases
+
+ALIASES
+=======
+Pattern: spells_active
+
+Execute the following javascript:
+  // Initialize a couple of strings for formatting
+  var spacesNeeded = 0;
+  var space = " ";
+  
+  // Make sure that the table isn't empty
+  if (gwc.userdata.spells === undefined ||
+        Object.keys(gwc.userdata.spells).length === 0) {
+    gwc.output.append("You haven't cast any spells yet...");
+    return;
+  }
+  
+  // Skip a line and set the header and form for the table
+  gwc.output.append("@--------------------------------@");
+  gwc.output.append("|    Spell Name   |  Active Y/N  |");
+  gwc.output.append("|-----------------|--------------|");
+  
+  // Loop through each spell type and the number of spells
+  // Format to center the spelle type, favoring the a left-align
+  //    when the name can't be perfectly centered
+  // Center the kill count and add a "0" before single-digit counts
+  for (var spell in gwc.userdata.spells) {
+    spacesNeeded = 17 - spell.length;
+    if (spacesNeeded % 2) {
+      gwc.output.append("|" + space.repeat(Math.floor(spacesNeeded / 2)) + 
+                        spell + space.repeat(Math.floor(spacesNeeded / 2) + 1) + 
+                        "|        " + gwc.userdata.spells[spell] + "     |");
+    } else {
+      gwc.output.append("|" + space.repeat(Math.floor(spacesNeeded / 2)) + 
+                        spell + space.repeat(Math.floor(spacesNeeded / 2)) + 
+                        "|        " + gwc.userdata.spells[spell] + "     |");
+      
+    }
+  }
+  gwc.output.append("@--------------------------------@");
+-----------------------------------------------------------------------------------------------------------------------------
+Pattern: dispel_spells
+
+Execute the following javascript:
+  gwc.userdata.recasting = false;
+  gwc.userdata.casting = false;
+  gwc.connection.send("dispel all");
+  gwc.userdata.spells = {};
+  
+------------------------------------------------------------------------------------------------------------------------------
+Pattern: dispel_shield
+
+Execute the following javascript:
+  var spell = 'viehra';
+  
+  gwc.userdata.recasting = false;
+  gwc.userdata.casting = false;
+  gwc.connection.send("dispel " + spell);
+  gwc.userdata.spells[spell] = 0;
+------------------------------------------------------------------------------------------------------------------------------
+Pattern: dispel_uralane
+
+Execute the following javascript:
+  var spell = 'uralane';
+  
+  gwc.userdata.recasting = false;
+  gwc.userdata.casting = false;
+  gwc.connection.send("dispel " + spell);
+  gwc.userdata.spells[spell] = 0;
+------------------------------------------------------------------------------------------------------------------------------
+Pattern: dispel_urhagash
+
+Execute the following javascript:
+  var spell = 'urhagash';
+  
+  gwc.userdata.recasting = false;
+  gwc.userdata.casting = false;
+  gwc.connection.send("dispel " + spell);
+  gwc.userdata.spells[spell] = 0;
+------------------------------------------------------------------------------------------------------------------------------
+//Alias to make casting easier (one for each spell)
+Pattern: uralane //change name for spell to be casted - set any word/combination which feels natural
+
+Execute the following javascript:
+  var spell = "uralane" //change name for spell to be casted
+  
+  //Magic on and off are used to wear/wield remove shields or any preperations which need to be made prior to cassting.
+  //What you have in these aliases depends what you as a player have on you which aid or hiner your spellcraft ability.
+  gwc.connection.send("magic on", true); //optional
+  gwc.connection.send("cast " + spell);
+  gwc.connection.send("magic off", true); //optional
+  gwc.output.color("#ff4c4c");
+  //creates an object to store casted spells if one does not exist already
+  if (gwc.userdata.spells === undefined) gwc.userdata.spells = {};
+  
+  //adds spell to created object wuth a value of 1 (1- active, 0-worn off)
+  gwc.userdata.spells[spell] = 1;
+  
+  //saves name of spell casted to allow for recasting
+  gwc.userdata.current_spell = spell
+  gwc.userdata.casting = true;
+------------------------------------------------------------------------------------------------------
+Pattern: urchem
+
+Execute the following javascript:
+  var spell = 'urchem';
+  
+  gwc.connection.send("magic on", true);
+  gwc.connection.send("cast " + spell);
+  gwc.connection.send("magic off", true);
+  gwc.output.color("#ff4c4c");
+  if (gwc.userdata.spells === undefined) gwc.userdata.spells = {};
+  gwc.userdata.spells[spell] = 1;
+  gwc.userdata.current_spell = spell
+  gwc.userdata.casting = true;
+------------------------------------------------------------------------------------------------------
+Pattern: urfiviel
+
+Execute the following javascript:
+  var spell = 'urfiviel';
+  
+  gwc.connection.send("magic on", true);
+  gwc.connection.send("cast " + spell);
+  gwc.connection.send("magic off", true);
+  gwc.output.color("#ff4c4c");
+  if (gwc.userdata.spells === undefined) gwc.userdata.spells = {};
+  gwc.userdata.spells[spell] = 1;
+  gwc.userdata.current_spell = spell
+  gwc.userdata.casting = true;
+------------------------------------------------------------------------------------------------------
+Pattern: urhadoele
+
+Execute the following javascript:
+  var spell = 'urhadoele';
+  
+  gwc.connection.send("magic on", true);
+  gwc.connection.send("cast " + spell);
+  gwc.connection.send("magic off", true);
+  gwc.output.color("#ff4c4c");
+  if (gwc.userdata.spells === undefined) gwc.userdata.spells = {};
+  gwc.userdata.spells[spell] = 1;
+  gwc.userdata.current_spell = spell
+  gwc.userdata.casting = true;
+------------------------------------------------------------------------------------------------------
+Pattern: urhagash
+
+Execute the following javascript:
+  var spell = 'urhagash';
+  
+  gwc.connection.send("magic on", true);
+  gwc.connection.send("cast " + spell);
+  gwc.connection.send("magic off", true);
+  gwc.output.color("#ff4c4c");
+  if (gwc.userdata.spells === undefined) gwc.userdata.spells = {};
+  gwc.userdata.spells[spell] = 1;
+  gwc.userdata.current_spell = spell
+  gwc.userdata.casting = true;
+------------------------------------------------------------------------------------------------------
+Pattern: urhavol
+
+Execute the following javascript:
+  var spell = 'urhavol';
+  
+  gwc.connection.send("magic on", true);
+  gwc.connection.send("cast " + spell);
+  gwc.connection.send("magic off", true);
+  gwc.output.color("#ff4c4c");
+  if (gwc.userdata.spells === undefined) gwc.userdata.spells = {};
+  gwc.userdata.spells[spell] = 1;
+  gwc.userdata.current_spell = spell
+  gwc.userdata.casting = true;
+------------------------------------------------------------------------------------------------------
+Pattern: urhuew
+
+Execute the following javascript:
+  var spell = 'urhuew';
+  
+  gwc.connection.send("magic on", true);
+  gwc.connection.send("cast " + spell);
+  gwc.connection.send("magic off", true);
+  gwc.connection.send("cast " + spell);
+  gwc.connection.send("casting_wear", true);
+  
+  gwc.output.color("#ff4c4c");
+  if (gwc.userdata.spells === undefined) gwc.userdata.spells = {};
+  gwc.userdata.spells[spell] = 1;
+  gwc.userdata.current_spell = spell
+  gwc.userdata.casting = true;
+------------------------------------------------------------------------------------------------------
+Pattern: urkenu
+
+Execute the following javascript:
+  var spell = 'urkenu';
+  
+  gwc.connection.send("magic on", true);
+  gwc.connection.send("cast " + spell);
+  gwc.connection.send("magic off", true);
+  gwc.output.color("#ff4c4c");
+  if (gwc.userdata.spells === undefined) gwc.userdata.spells = {};
+  gwc.userdata.spells[spell] = 1;
+  gwc.userdata.current_spell = spell
+  gwc.userdata.casting = true;
+------------------------------------------------------------------------------------------------------
+Pattern: shield
+
+Execute the following javascript:
+  var spell = 'viehra';
+  
+  gwc.connection.send("magic on", true);
+  gwc.connection.send("cast " + spell);
+  gwc.connection.send("magic off", true);
+  gwc.output.color("#ff4c4c");
+  if (gwc.userdata.spells === undefined) gwc.userdata.spells = {};
+  gwc.userdata.spells[spell] = 1;
+  gwc.userdata.current_spell = spell
+  gwc.userdata.casting = true;
+------------------------------------------------------------------------------------------------------
+Pattern: ngasha (or chosen damage spell)
+
+Execute the following javascript:
+  var spell = 'ngasha';
+  
+  gwc.connection.send("magic on", true);
+  gwc.connection.send("cast " + spell);
+  gwc.connection.send("magic off", true);
+  gwc.output.color("#ff4c4c");
+  if (gwc.userdata.spells === undefined) gwc.userdata.spells = {};
+  gwc.userdata.spells[spell] = 1;
+  gwc.userdata.current_spell = spell
+  gwc.userdata.casting = true;
+------------------------------------------------------------------------------------------------------
+TRIGGERS
+========
+Name: Recasting - spell wears off
+Type: regexp
+Pattern: ^(You feel yourself shrinking as Urhagash wears off. Painful.|You sense your Urhagash spell is beginning to fade.|You feel more taxed as |Your Viehra dissipates.|The reality around you crawls back to normal pace.|The tingling in your eyes fades away.|You return to your normal appearance.|You feel more taxed as the effect of the spell Urhuew ends.)
+
+Execute the following javascript:
+  var spell = gwc.userdata.current_spell;
+  switch(args[1]){
+    case 'You sense your Urhagash spell is beginning to fade.' || 'You feel yourself shrinking as Urhagash wears off. Painful.':
+      gwc.output.color("#ff4c4c");
+      var spell = 'urhagash';
+      break;
+  
+    case 'You feel more taxed as the effect of the spell Urhuew ends.':
+      gwc.output.color("#ff4c4c");
+      var spell = 'urhuew';
+      break;
+  
+    case 'Your Viehra dissipates.':
+      gwc.output.color("#ff4c4c");
+      var spell = 'viehra';
+      break;
+  
+    case 'The reality around you crawls back to normal pace.':
+      gwc.output.color("#ff4c4c");
+      var spell = 'uralane';
+      break;
+  
+    case 'The tingling in your eyes fades away.':
+      gwc.output.color("#ff4c4c");
+      var spell = 'urhavol';
+      break;
+  
+    case 'You return to your normal appearance.':
+      gwc.output.color("#ff4c4c");
+      var spell = 'urchem';
+      break;
+  }
+  
+  if (gwc.userdata.spells === undefined) gwc.userdata.spells = {};
+  gwc.userdata.spells[spell] = 0;
+  gwc.userdata.current_spell = spell
+  gwc.userdata.casting = true
+  
+  if (gwc.userdata.casting == true && gwc.userdata.recasting == true) {
+    gwc.output.append("Your " + spell + " wore off.");
+    gwc.connection.send("cast " + spell);
+    gwc.userdata.spells[spell] = 1;
+    gwc.output.append("--> Casting " + spell);
+  }
+
+------------------------------------------------------------------------------------------------------
+Name: Recasting/casting fail
+Type: regexp
+Pattern: (You fail in your efforts to invoke the spell|You have lost concentration while moving).
+
+Execute the following javascript:
+  var spell = gwc.userdata.current_spell
+  
+  if (gwc.userdata.casting == true){
+  
+    gwc.connection.send(spell, true);
+    gwc.output.color("#ff4c4c");
+    gwc.userdata.spells[spell] = 0;}
+------------------------------------------------------------------------------------------------------
+Name: Recasting/casting success
+Type: regexp
+Pattern: (You renew the duration of|Your appearance magically changes!|Your body starts to radiate a cold sickening blue glow|You grimace slightly as your body cracks and snaps|Your eyes tingle with a strange sensation. You can now see in darkness, invisible creatures and objects.|weight of your belongings eases dramatically|you warp the reality around you|A spectral frost forms and surround your body)
+
+Execute the following javascript:
+  var spell = gwc.userdata.current_spell
+  
+  gwc.output.color("#ff4c4c");
+  if (gwc.userdata.spells === undefined) gwc.userdata.spells = {};
+  gwc.userdata.spells[spell] = 1;
+  gwc.userdata.current_spell = 0
+  gwc.userdata.casting = false;
+------------------------------------------------------------------------------------------------------
+Name: Reflaring
+Type: regexp
+Pattern: are not (properly|sufficiently) prepared
+
+Execute the following javascript:
+  gwc.connection.send("wacreate " + gwc.userdata.current_spell);
+  gwc.connection.send("flare " + gwc.userdata.current_spell);
+  gwc.connection.send(gwc.userdata.current_spell, true);
+  
+  
+------------------------------------------------------------------------------------------------------
+Name: Reflaring uralane
+Type: plain
+Pattern: You need the proper reagent for Uralane!
+
+Execute the following javascript:
+    gwc.connection.send("wacreate " + gwc.userdata.current_spell);
+    gwc.connection.send("flare " + gwc.userdata.current_spell);
+    gwc.connection.send(gwc.userdata.current_spell, true);
+------------------------------------------------------------------------------------------------------
+Name: Reflaring urhadoele
+Type: plain
+Pattern: You lack the necessary preparations to cast Urhadoele!
+
+Execute the following javascript:
+    gwc.connection.send("wacreate " + gwc.userdata.current_spell);
+    gwc.connection.send("flare " + gwc.userdata.current_spell);
+    gwc.connection.send(gwc.userdata.current_spell, true);
+------------------------------------------------------------------------------------------------------
